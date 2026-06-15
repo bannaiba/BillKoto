@@ -14,10 +14,8 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../dist')));
-}
+// Serve static files from the React build
+app.use(express.static(path.join(__dirname, '../dist')));
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -121,12 +119,10 @@ app.post('/api/parse-receipt', async (req, res) => {
   }
 });
 
-// Catch-all for production SPA routing
-if (process.env.NODE_ENV === 'production') {
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
-  });
-}
+// Catch-all for SPA routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`FairSplit server running on http://localhost:${PORT}`);
