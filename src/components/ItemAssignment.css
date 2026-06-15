@@ -1,0 +1,333 @@
+/* ============================================
+   Item Assignment — Step 4
+   ============================================ */
+
+.item-assignment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.assign-header {
+  text-align: center;
+}
+
+.assign-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.assign-header p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+/* ---- Progress ---- */
+.assign-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.assign-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.assign-progress-fill {
+  height: 100%;
+  background: var(--accent-gradient);
+  border-radius: var(--radius-full);
+  transition: width 0.4s var(--ease-out);
+}
+
+.assign-progress-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Quick Actions ---- */
+.assign-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.assign-remaining-dropdown {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.assign-remaining-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.assign-remaining-chips {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.chip-mini {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--chip-color) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--chip-color) 40%, transparent);
+  color: var(--chip-color);
+  font-size: 0.6rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.chip-mini:hover {
+  background: var(--chip-color);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* ---- Warning ---- */
+.assign-warning {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--warning-dim);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--warning);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ---- Item Cards ---- */
+.assign-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.assign-item-card {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-md);
+  animation: fadeInUp 0.35s var(--ease-out) both;
+  transition: all var(--transition-fast);
+}
+
+.assign-item-card:hover {
+  background: var(--bg-card-hover);
+}
+
+.assign-item-card[draggable="true"] {
+  cursor: grab;
+}
+
+.assign-item-card[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.assign-item-card.drag-over {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--bg-card-hover) 80%, var(--accent) 15%);
+  transform: scale(1.01);
+  box-shadow: var(--shadow-glow);
+}
+
+.assign-item-card.unassigned {
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.assign-item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.assign-item-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.assign-item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.assign-item-qty-group {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.assign-item-qty {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+}
+
+.btn-icon-tiny {
+  background: rgba(99, 102, 241, 0.1);
+  color: #818cf8;
+  border: 1px solid transparent;
+  font-size: 0.75rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+}
+
+.btn-icon-tiny:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #818cf8;
+  transform: scale(1.15) rotate(-15deg);
+}
+
+.assign-item-price {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--accent-light);
+  font-family: var(--font-mono);
+}
+
+.assign-item-split {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ---- Person Chips ---- */
+.assign-people-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.person-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 0.8rem;
+  transition: all var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.person-chip:hover {
+  border-color: color-mix(in srgb, var(--chip-color) 50%, transparent);
+  background: color-mix(in srgb, var(--chip-color) 8%, transparent);
+}
+
+.person-chip.selected {
+  background: color-mix(in srgb, var(--chip-color) 18%, transparent);
+  border-color: var(--chip-color);
+  color: var(--chip-color);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--chip-color) 20%, transparent);
+}
+
+.person-chip-avatar {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: var(--radius-full);
+  background: var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  transition: background var(--transition-fast);
+}
+
+.person-chip.selected .person-chip-avatar {
+  background: var(--chip-color);
+  color: white;
+}
+
+.person-chip-name {
+  font-weight: 500;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- Actions ---- */
+.assign-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.assign-actions .btn {
+  flex: 1;
+  max-width: 200px;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 540px) {
+  .assign-item-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .assign-people-chips {
+    justify-content: flex-start;
+  }
+
+  .assign-quick-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .person-chip-name {
+    display: none;
+  }
+
+  .person-chip {
+    padding: 0.3rem;
+  }
+
+  .person-chip-avatar {
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 0.65rem;
+  }
+
+  .assign-actions .btn {
+    max-width: none;
+  }
+}

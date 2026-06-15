@@ -1,0 +1,215 @@
+/* ============================================
+   Receipt Upload — Step 1
+   ============================================ */
+
+.receipt-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.upload-header {
+  text-align: center;
+}
+
+.upload-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.upload-header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ---- Drop Zone ---- */
+.drop-zone {
+  position: relative;
+  border: 2px dashed var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3xl) var(--space-xl);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  background: var(--bg-card);
+}
+
+.drop-zone:hover,
+.drop-zone.dragging {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  box-shadow: var(--shadow-glow);
+}
+
+.drop-zone-input {
+  display: none;
+}
+
+.drop-zone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.drop-zone-icon {
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+  transition: color var(--transition-normal);
+}
+
+.drop-zone:hover .drop-zone-icon {
+  color: var(--accent);
+}
+
+.drop-zone-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.drop-zone-highlight {
+  color: var(--accent-light);
+  font-weight: 600;
+}
+
+.drop-zone-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.drop-zone-mobile-hint {
+  display: none;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+@media (max-width: 640px) {
+  .drop-zone-mobile-hint {
+    display: block;
+  }
+
+  .drop-zone {
+    padding: var(--space-2xl) var(--space-lg);
+  }
+}
+
+/* ---- Preview ---- */
+.preview-container {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-sm);
+}
+
+.preview-image-wrapper {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.preview-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  display: block;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+}
+
+.preview-remove {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.preview-remove:hover {
+  background: var(--danger);
+}
+
+/* ---- Processing Overlay ---- */
+.processing-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 6, 11, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  border-radius: var(--radius-lg);
+  animation: fadeIn 0.3s ease;
+}
+
+.processing-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-subtle);
+  border-top-color: var(--accent);
+  border-radius: var(--radius-full);
+  animation: spin 0.8s linear infinite;
+}
+
+.processing-text {
+  font-weight: 600;
+  font-size: 1rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.processing-subtext {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+/* ---- Error ---- */
+.upload-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--danger-dim);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  color: #fca5a5;
+  font-size: 0.85rem;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ---- Actions ---- */
+.upload-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.upload-actions .btn {
+  min-width: 160px;
+}
+
+@media (max-width: 640px) {
+  .upload-actions {
+    flex-direction: column;
+  }
+
+  .upload-actions .btn {
+    width: 100%;
+  }
+}

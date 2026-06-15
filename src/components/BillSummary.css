@@ -1,0 +1,324 @@
+/* ============================================
+   Bill Summary — Step 5
+   ============================================ */
+
+.bill-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.summary-header {
+  text-align: center;
+}
+
+.summary-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.summary-restaurant {
+  color: var(--accent-light);
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: var(--space-2xs);
+}
+
+.summary-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+/* ---- Person Cards ---- */
+.summary-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.summary-card {
+  padding: var(--space-lg);
+  animation: fadeInUp 0.4s var(--ease-out) both;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--person-color);
+  border-radius: var(--radius-full);
+}
+
+.summary-card:hover {
+  border-color: color-mix(in srgb, var(--person-color) 30%, transparent);
+}
+
+.summary-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+  gap: var(--space-sm);
+}
+
+.summary-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.summary-person-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.summary-avatar {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.summary-person-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.summary-person-total {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--accent-light);
+  font-family: var(--font-mono);
+}
+
+/* ---- Items list ---- */
+.summary-card-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-sm);
+}
+
+.summary-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.summary-item-name {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.summary-split-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--radius-full);
+}
+
+.summary-qty-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  padding: 0.1rem 0.3rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+}
+
+.summary-item-amount {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+/* ---- Breakdown ---- */
+.summary-card-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.summary-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.summary-row-total {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-2xs);
+}
+
+/* Copy button */
+.summary-copy-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  font-family: var(--font);
+  flex-shrink: 0;
+}
+
+.summary-copy-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+  border-color: var(--border-medium);
+}
+
+/* ---- Grand Total ---- */
+.summary-grand {
+  padding: var(--space-lg);
+}
+
+.summary-grand-prominent {
+  border-color: rgba(16, 185, 129, 0.18);
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.06) 0%,
+    var(--bg-card) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-grand-prominent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent-gradient);
+  border-radius: var(--radius-full);
+}
+
+.summary-grand-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xs) 0;
+}
+
+.summary-grand-row span:first-child {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.summary-grand-amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.summary-grand-match {
+  text-align: center;
+  padding: var(--space-sm);
+  margin-top: var(--space-sm);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--success);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.summary-grand-diff {
+  text-align: center;
+  padding: var(--space-sm);
+  margin-top: var(--space-sm);
+  background: var(--warning-dim);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--warning);
+  font-size: 0.85rem;
+}
+
+/* ---- Actions ---- */
+.summary-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.start-over-btn {
+  width: 100%;
+  opacity: 0.7;
+}
+
+.start-over-btn:hover {
+  opacity: 1;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .summary-card-header {
+    flex-wrap: wrap;
+    row-gap: var(--space-xs);
+  }
+
+  .summary-person-info {
+    flex: 1;
+  }
+
+  .summary-person-total {
+    font-size: 1.3rem;
+  }
+
+  .summary-header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .summary-copy-btn {
+    position: static;
+  }
+
+  .summary-actions {
+    flex-direction: column;
+  }
+
+  .summary-actions .btn {
+    width: 100%;
+  }
+}

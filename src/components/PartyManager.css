@@ -1,0 +1,188 @@
+/* ============================================
+   Party Manager — Step 3
+   ============================================ */
+
+.party-manager {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.party-header {
+  text-align: center;
+}
+
+.party-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.party-header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ---- Input Row ---- */
+.party-input-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.party-input {
+  flex: 1;
+}
+
+/* ---- People Grid ---- */
+.people-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-md);
+}
+
+.person-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  animation: fadeInUp 0.35s var(--ease-out) both;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.person-card:hover {
+  border-color: var(--person-color, var(--border-medium));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--person-color, var(--accent)) 15%, transparent);
+}
+
+.person-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.person-name {
+  flex: 1;
+  font-weight: 500;
+  font-size: 0.9rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.person-remove {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  transition: all var(--transition-fast);
+  opacity: 0;
+}
+
+.person-card:hover .person-remove {
+  opacity: 1;
+}
+
+.person-remove:hover {
+  color: var(--danger);
+  background: var(--danger-dim);
+}
+
+/* ---- Empty / Hint ---- */
+.party-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xl);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.party-empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+}
+
+.party-empty p {
+  font-size: 0.9rem;
+}
+
+.party-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--warning-dim);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--warning);
+  font-size: 0.85rem;
+}
+
+.party-count {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.party-count-num {
+  color: var(--accent-light);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* ---- Actions ---- */
+.party-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.party-actions .btn {
+  flex: 1;
+  max-width: 200px;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .party-input-row {
+    flex-wrap: wrap;
+  }
+
+  .party-input-row .party-input {
+    flex: 1 1 100%;
+  }
+
+  .party-input-row .btn {
+    flex: 1;
+  }
+
+  .people-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .person-remove {
+    opacity: 1;
+  }
+
+  .party-actions .btn {
+    max-width: none;
+  }
+}
