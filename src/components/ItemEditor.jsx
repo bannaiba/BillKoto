@@ -279,36 +279,67 @@ export default function ItemEditor({ items, setItems, charges, setCharges, resta
 
         <div className="charge-divider" />
 
-        {/* Discount */}
-        <div className="charge-group-label">Discount</div>
-        <div className="charge-pair-row">
-          <div className="charge-pair-item">
-            <label>%</label>
+        {/* Discount toggle */}
+        <div className="charge-row">
+          <label className="checkbox-label" htmlFor="charge-discount-toggle">
             <input
-              className="input charge-input charge-input-sm"
-              type="number"
-              value={charges.discountPercent || ''}
-              onChange={(e) => updateCharge('discountPercent', e.target.value)}
-              step="0.01"
-              min="0"
-              placeholder="0"
-              id="charge-discount-percent"
+              type="checkbox"
+              checked={(charges.discount > 0 || charges.discountPercent > 0)}
+              onChange={(e) => {
+                if (!e.target.checked) {
+                  setCharges((prev) => {
+                    const updated = { ...prev, discount: 0, discountPercent: 0 };
+                    updated.total = updated.isInclusive
+                      ? updated.subtotal
+                      : updated.subtotal + updated.vatAmount + updated.serviceChargeAmount;
+                    return updated;
+                  });
+                }
+              }}
+              id="charge-discount-toggle"
             />
-          </div>
-          <div className="charge-pair-item">
-            <label>Amount</label>
-            <input
-              className="input charge-input"
-              type="number"
-              value={charges.discount || ''}
-              onChange={(e) => updateCharge('discount', e.target.value)}
-              step="0.01"
-              min="0"
-              placeholder="0.00"
-              id="charge-discount"
-            />
-          </div>
+            <span className="checkbox-label-text">
+              <span className="checkbox-label-title">Discount</span>
+              <span className="checkbox-label-sub">Apply a percentage or flat discount</span>
+            </span>
+            <span className={`toggle-track${(charges.discount > 0 || charges.discountPercent > 0) ? ' checked' : ''}`}>
+              <span className="toggle-thumb" />
+            </span>
+          </label>
         </div>
+
+        {(charges.discount > 0 || charges.discountPercent > 0) && (
+          <>
+            <div className="charge-pair-row">
+              <div className="charge-pair-item">
+                <label>%</label>
+                <input
+                  className="input charge-input charge-input-sm"
+                  type="number"
+                  value={charges.discountPercent || ''}
+                  onChange={(e) => updateCharge('discountPercent', e.target.value)}
+                  step="0.01"
+                  min="0"
+                  placeholder="0"
+                  id="charge-discount-percent"
+                />
+              </div>
+              <div className="charge-pair-item">
+                <label>Amount</label>
+                <input
+                  className="input charge-input"
+                  type="number"
+                  value={charges.discount || ''}
+                  onChange={(e) => updateCharge('discount', e.target.value)}
+                  step="0.01"
+                  min="0"
+                  placeholder="0.00"
+                  id="charge-discount"
+                />
+              </div>
+            </div>
+          </>
+        )}
 
         <div className="charge-divider" />
 

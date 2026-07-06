@@ -27,10 +27,17 @@ RULES:
 3. If quantity is not shown, assume 1
 4. Identify VAT/tax percentage and amount separately
 5. Identify service charge percentage and amount separately
-6. Identify any discount amount applied
+6. Identify any discount percentage and amount separately
 7. Determine if the receipt prices are "inclusive" of VAT/service charge (e.g. sum of item prices exactly matches the total amount) or "exclusive" (sum of item prices + vat + service = total). Set isInclusive to true or false.
 8. All numbers must be plain numbers (no currency symbols)
 9. Return ONLY valid JSON — no markdown, no code fences, no explanation text
+
+COMBO / SET MEAL HANDLING (VERY IMPORTANT):
+- Many receipts have combo meals, set meals, or bundled items where a parent item (e.g. "Coleslaw And Drinks Combo") is followed by sub-components (e.g. "Chocolate Crusher") on separate rows.
+- Sub-components of combos typically have NO price or a price of 0, because their cost is already included in the parent combo price.
+- If a row has NO price and appears directly after a priced item, it is almost certainly a sub-component of that combo/set meal. MERGE it into the parent item by appending the sub-component name in parentheses. For example: "Coleslaw And Drinks Combo (Chocolate Crusher)".
+- Do NOT list zero-price sub-components as separate items. Only output items that have a real price > 0.
+- If multiple sub-components appear consecutively after a combo item (all with no price), merge ALL of them into the parent: "Combo Name (Sub1, Sub2, Sub3)".
 
 Required JSON format:
 {
@@ -39,7 +46,7 @@ Required JSON format:
     { "name": "Item Name", "quantity": 1, "price": 123.00 }
   ],
   "subtotal": 0,
-  "discount": 0,
+  "discount": { "percentage": 0, "amount": 0 },
   "vat": { "percentage": 0, "amount": 0 },
   "serviceCharge": { "percentage": 0, "amount": 0 },
   "isInclusive": false,

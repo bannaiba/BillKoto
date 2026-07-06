@@ -30,12 +30,15 @@ export async function parseReceipt(imageDataUrl) {
  * Normalizes and validates the parsed receipt data.
  */
 function normalizeReceiptData(data) {
-  const items = (data.items || []).map((item, index) => ({
-    id: `item-${index}-${Date.now()}`,
-    name: item.name || `Item ${index + 1}`,
-    quantity: Number(item.quantity) || 1,
-    price: Number(item.price) || 0,
-  }));
+  // Filter out zero-price sub-items (combo components) as a safety net
+  const items = (data.items || [])
+    .filter((item) => Number(item.price) > 0)
+    .map((item, index) => ({
+      id: `item-${index}-${Date.now()}`,
+      name: item.name || `Item ${index + 1}`,
+      quantity: Number(item.quantity) || 1,
+      price: Number(item.price) || 0,
+    }));
 
   const subtotal =
     Number(data.subtotal) ||
@@ -45,9 +48,23 @@ function normalizeReceiptData(data) {
   const vatAmount = Number(data.vat?.amount) || 0;
   const serviceChargePercent = Number(data.serviceCharge?.percentage) || 0;
   const serviceChargeAmount = Number(data.serviceCharge?.amount) || 0;
-  const discount = Number(data.discount) || 0;
+
+  // Handle discount as either an object {percentage, amount} or a plain number
+  let discountPercent = 0;
+  let discountAmount = 0;
+  if (typeof data.discount === 'object' && data.discount !== null) {
+    discountPercent = Number(data.discount.percentage) || 0;
+    discountAmount = Number(data.discount.amount) || 0;
+  } else {
+    discountAmount = Number(data.discount) || 0;
+  }
+  // Derive percent from amount if the AI only gave an amount
+  if (discountPercent === 0 && discountAmount > 0 && subtotal > 0) {
+    discountPercent = Math.round((discountAmount / subtotal) * 10000) / 100;
+  }
+
   const isInclusive = Boolean(data.isInclusive);
-  const total = Number(data.total) || (isInclusive ? subtotal - discount : subtotal - discount + vatAmount + serviceChargeAmount);
+  const total = Number(data.total) || (isInclusive ? subtotal - discountAmount : subtotal - discountAmount + vatAmount + serviceChargeAmount);
 
   return {
     restaurantName: data.restaurantName || null,
@@ -55,7 +72,8 @@ function normalizeReceiptData(data) {
     items,
     charges: {
       subtotal,
-      discount,
+      discountPercent,
+      discount: discountAmount,
       vatPercent,
       vatAmount,
       serviceChargePercent,
