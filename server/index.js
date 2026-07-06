@@ -32,12 +32,25 @@ RULES:
 8. All numbers must be plain numbers (no currency symbols)
 9. Return ONLY valid JSON — no markdown, no code fences, no explanation text
 
-COMBO / SET MEAL HANDLING (VERY IMPORTANT):
-- Many receipts have combo meals, set meals, or bundled items where a parent item (e.g. "Coleslaw And Drinks Combo") is followed by sub-components (e.g. "Chocolate Crusher") on separate rows.
-- Sub-components of combos typically have NO price or a price of 0, because their cost is already included in the parent combo price.
-- If a row has NO price and appears directly after a priced item, it is almost certainly a sub-component of that combo/set meal. MERGE it into the parent item by appending the sub-component name in parentheses. For example: "Coleslaw And Drinks Combo (Chocolate Crusher)".
-- Do NOT list zero-price sub-components as separate items. Only output items that have a real price > 0.
-- If multiple sub-components appear consecutively after a combo item (all with no price), merge ALL of them into the parent: "Combo Name (Sub1, Sub2, Sub3)".
+COMBO / SET MEAL HANDLING (CRITICAL):
+Receipts often contain combo/set/bowl meals where a parent item is followed by sub-component rows that have NO price column at all. You MUST handle this correctly:
+
+- A sub-component row has NO numbers in the price columns. Its cost is already included in the parent item's price.
+- Prefixes like "1*1", "*1", "1x1" before a name with NO price indicate a combo sub-component, NOT a separate item.
+- MERGE all consecutive zero-price / no-price rows into the preceding priced item by appending the names in parentheses.
+- NEVER output an item with price = 0. Every item in the output MUST have price > 0.
+
+Examples of what to merge:
+  Receipt shows:
+    1 Thai Chicken Bowl   538.10 538.10
+    1*1 Chicken in Black Paper
+  Output: { "name": "Thai Chicken Bowl (Chicken in Black Paper)", "quantity": 1, "price": 538.10 }
+
+  Receipt shows:
+    1 Coleslaw And Drinks Combo   132.38 132.38
+    1*1 Chocolate Crusher
+    1*1 Fries
+  Output: { "name": "Coleslaw And Drinks Combo (Chocolate Crusher, Fries)", "quantity": 1, "price": 132.38 }
 
 Required JSON format:
 {
@@ -117,6 +130,31 @@ app.post('/api/parse-receipt', async (req, res) => {
     }
 
     const receiptData = JSON.parse(jsonStr);
+
+    // Post-process: merge any zero-price items into the preceding item
+    if (Array.isArray(receiptData.items)) {
+      const merged = [];
+      for (const item of receiptData.items) {
+        const price = Number(item.price) || 0;
+        if (price <= 0 && merged.length > 0) {
+          // This is a combo sub-component — merge into previous item
+          const parent = merged[merged.length - 1];
+          const subName = (item.name || '').replace(/^\d+\*\d+\s*/, '').trim();
+          if (subName) {
+            if (parent.name.includes('(')) {
+              // Already has sub-components, append
+              parent.name = parent.name.replace(/\)$/, `, ${subName})`);
+            } else {
+              parent.name = `${parent.name} (${subName})`;
+            }
+          }
+        } else {
+          merged.push({ ...item });
+        }
+      }
+      receiptData.items = merged;
+    }
+
     res.json(receiptData);
   } catch (error) {
     console.error('Error parsing receipt:', error.message);
