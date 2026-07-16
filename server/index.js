@@ -61,6 +61,7 @@ Sometimes, long item names wrap to the next line on the receipt. When a name wra
     2                     366.67 366.67
 - Do NOT treat the first line as a combo component or ignore it. Combine them into a single item: "Tom Yum Rice With Prawn.For 2" with price 366.67.
 - Always check if the zero-price row ends in a preposition or connector (like "For", "with", "and", "of") and combines with the next priced row to form a complete item name.
+- IMPORTANT: If a line already has a price printed next to it on the same line (e.g. "1 Khao San Seafood Rice.For 2  395.24"), it is a complete, distinct item. Do NOT split it or merge it with other items. Only merge if the first line has no price.
 
 Required JSON format:
 {
@@ -161,7 +162,7 @@ app.post('/api/parse-receipt', async (req, res) => {
           const isContinuation = isNextPriced && (
             /^\d+$/.test(nextName) || 
             nextName.length <= 3 || 
-            (nextName[0] && nextName[0] === nextName[0].toLowerCase()) ||
+            /^[a-z]/.test(nextName) ||
             endsWithConnectingWord
           );
           
