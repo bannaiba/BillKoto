@@ -83,6 +83,7 @@ app.post('/api/parse-receipt', async (req, res) => {
 
     // Try models in order of preference until one works
     const MODEL_FALLBACK_ORDER = [
+      'gemini-3-flash',
       'gemini-2.5-flash',
       'gemini-2.5-flash-lite',
       'gemini-2.0-flash',
