@@ -52,6 +52,16 @@ Examples of what to merge:
     1*1 Fries
   Output: { "name": "Coleslaw And Drinks Combo (Chocolate Crusher, Fries)", "quantity": 1, "price": 132.38 }
 
+LINE WRAPPING / WRAPPED ITEMS (CRITICAL):
+Sometimes, long item names wrap to the next line on the receipt. When a name wraps:
+- The first line contains part of the name but has NO price.
+- The second line contains the wrapped part of the name and HAS the price.
+- For example:
+    1 Tom Yum Rice With Prawn.For
+    2                     366.67 366.67
+- Do NOT treat the first line as a combo component or ignore it. Combine them into a single item: "Tom Yum Rice With Prawn.For 2" with price 366.67.
+- Always check if the zero-price row ends in a preposition or connector (like "For", "with", "and", "of") and combines with the next priced row to form a complete item name.
+
 Required JSON format:
 {
   "restaurantName": "string or null",
@@ -132,28 +142,56 @@ app.post('/api/parse-receipt', async (req, res) => {
 
     const receiptData = JSON.parse(jsonStr);
 
-    // Post-process: merge any zero-price items into the preceding item
+    // Post-process: merge wrapped lines (forward) and combo sub-components (backward)
     if (Array.isArray(receiptData.items)) {
-      const merged = [];
-      for (const item of receiptData.items) {
+      const processed = [];
+      const rawItems = receiptData.items;
+      
+      for (let i = 0; i < rawItems.length; i++) {
+        const item = rawItems[i];
         const price = Number(item.price) || 0;
-        if (price <= 0 && merged.length > 0) {
-          // This is a combo sub-component — merge into previous item
-          const parent = merged[merged.length - 1];
+        
+        if (price <= 0) {
+          // Check if this is a wrapped line (if the next item has a price and is a continuation of this one)
+          const nextItem = rawItems[i + 1];
+          const isNextPriced = nextItem && (Number(nextItem.price) || 0) > 0;
+          const nextName = nextItem ? (nextItem.name || '').trim() : '';
+          
+          const endsWithConnectingWord = /\b(for|with|and|of|to|in|at|the|a|an|from|by|on|or|with\.|for\.)\s*$/i.test(item.name || '');
+          const isContinuation = isNextPriced && (
+            /^\d+$/.test(nextName) || 
+            nextName.length <= 3 || 
+            (nextName[0] && nextName[0] === nextName[0].toLowerCase()) ||
+            endsWithConnectingWord
+          );
+          
+          if (isContinuation) {
+            // Merge FORWARD into the next item
+            nextItem.name = `${item.name} ${nextItem.name}`.trim();
+            // Retain the parent's quantity if the continuation doesn't specify one
+            if (item.quantity && (!nextItem.quantity || nextItem.quantity === 1)) {
+              nextItem.quantity = item.quantity;
+            }
+            continue;
+          }
+        }
+        
+        // Regular zero-price handler (backward combo merge) or normal priced item
+        if (price <= 0 && processed.length > 0) {
+          const parent = processed[processed.length - 1];
           const subName = (item.name || '').replace(/^\d+\*\d+\s*/, '').trim();
           if (subName) {
             if (parent.name.includes('(')) {
-              // Already has sub-components, append
               parent.name = parent.name.replace(/\)$/, `, ${subName})`);
             } else {
               parent.name = `${parent.name} (${subName})`;
             }
           }
-        } else {
-          merged.push({ ...item });
+        } else if (price > 0) {
+          processed.push({ ...item });
         }
       }
-      receiptData.items = merged;
+      receiptData.items = processed;
     }
 
     res.json(receiptData);
